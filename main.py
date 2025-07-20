@@ -27,7 +27,7 @@ with open('config.ini', 'r') as configfile:
                 statuslevels[i] = int(statuslevels[i])
             # setting statusnames
             statusnames = list(configs[3].strip("\n").strip(" ").split(","))
-            yvar = configs[4]
+            yvar = configs[4].strip("\n")
             # output csv?
             printcsv = configs[5]
             csv = False

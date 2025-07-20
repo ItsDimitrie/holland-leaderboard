@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class ServerInfo:
-
     def __init__(self, URL, top=100): 
         res = requests.get(URL)
         # res.json() is now the entire webpage API as a dictionary
