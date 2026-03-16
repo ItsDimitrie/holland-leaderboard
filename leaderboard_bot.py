@@ -7,13 +7,13 @@
 
 import os, asyncio, aiohttp, discord
 from discord.ext import tasks
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-CHANNEL_ID    = int(os.getenv("CHANNEL_ID", "0"))
+CHANNEL_ID_LEADERBOARD    = int(os.getenv("CHANNEL_ID_LEADERBOARD", "0"))
 SERVER_ID     = os.getenv("MEE6_SERVER_ID", "792410559948914738")
 TOP           = int(os.getenv("TOP", "25"))   # how many members to show
 
@@ -77,7 +77,7 @@ def build_embed(players: list[dict], server_name: str, guild: dict) -> discord.E
         inline=False,
     )
 
-    now = datetime.now(timezone.utc).strftime("%H:%M:%S UTC")
+    now = datetime.now(timezone(timedelta(hours=1))).strftime("%H:%M:%S UTC+1")
     embed.set_footer(text=f"🕐 Geüpdatet om {now}  •  🏅 Blijf actief en win prijzen!  •  © VPG Holland 2026")
     return embed
 
@@ -85,9 +85,9 @@ def build_embed(players: list[dict], server_name: str, guild: dict) -> discord.E
 @client.event
 async def on_ready():
     print(f"Logged in as {client.user} ({client.user.id})")
-    channel = client.get_channel(CHANNEL_ID)
+    channel = client.get_channel(CHANNEL_ID_LEADERBOARD)
     if channel is None:
-        print(f"ERROR: channel {CHANNEL_ID} not found — check CHANNEL_ID in .env")
+        print(f"ERROR: channel {CHANNEL_ID_LEADERBOARD} not found — check CHANNEL_ID_LEADERBOARD in .env")
         return
 
     # Send an initial placeholder so we have a message to edit.
@@ -131,6 +131,6 @@ async def refresh_leaderboard():
 if __name__ == "__main__":
     if not DISCORD_TOKEN:
         raise SystemExit("DISCORD_TOKEN not set — add it to your .env file")
-    if CHANNEL_ID <= 0:
-        raise SystemExit("CHANNEL_ID not set or invalid — add it to your .env file")
+    if CHANNEL_ID_LEADERBOARD <= 0:
+        raise SystemExit("CHANNEL_ID_LEADERBOARD not set or invalid — add it to your .env file")
     client.run(DISCORD_TOKEN)
