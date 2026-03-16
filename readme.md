@@ -1,42 +1,58 @@
-# Mee6 Leaderboard Graphs
-Here you go! Spent a couple days working on this little project. I always thought that the Mee6 leaderboard site had great data for demographic charts, especially with its use in popular servers. This should work with all Discord servers that use the Mee6 bot. Let me know if there are any bugs. 
+# VPG Holland — Discord Leaderboard Bot
 
-## What it does
-This program creates graphs to visualize up to the top 1000 members of your Discord server. The graphs include a pie chart showing a breakdown of level ranges of members, a leaderboard the top members and their levels/experience represented in a bar graph, a histogram showing the frequency distribution of levels in the sample, and a few more general analytics statements. 
+A Discord bot that fetches the MEE6 XP leaderboard and posts a live-updating embed in your server, refreshing every 60 seconds.
 
-## How to use
+## Features
 
-### Getting started
-To use this program, you will need a couple things: 
-- Python 3
-- Make sure that the server you want to graph has the Mee6 bot
-- Your Mee6 Server ID (more on this below)
+- Shows the top 25 members with rank, level, XP, and message count
+- Medal emojis for the top 10 (🥇🥈🥉 for the podium, 4️⃣–🔟 for ranks 4–10)
+- Visual dividers separating the podium, top 10, and the rest
+- Server icon thumbnail pulled automatically from Discord
+- Edits the same message on each refresh — no channel spam
+- Clickable link to the full MEE6 leaderboard
 
-Getting your Mee6 Server ID: 
-1. Go on the server you want to use and type `!levels` in the chat
-2. Visit the link that Mee6 replies with, it should look like this: https://mee6.xyz/leaderboard/123456789123456789 or https://mee6.xyz/levels/123456789123456789
-3. The server ID is the numbers at the end of the url, in this case "123456789123456789"
+## Setup
 
-### Configurations
-The config.ini file you will need to edit to run the program with the server and settings you want. Here's how to use it. To use the default settings (if available) in each line, write `na`
+### 1. Clone and install dependencies
 
-Each line of config.ini explained: 
-1. Mee6 Server ID: the number from the Mee6 leaderboard url (see above). REQUIRED FIELD
-2. Number of members (3 - 1000): How many server top members the program should take into account, sample size. Default is `100`
-3. Level cutoffs for pie chart: You decide the level ranges for the pie chart slices, separate with commas. Default is `10,20,30,40,50`
-4. Names for each level range: For the pie chart legend. Useful if your server has roles when members reach certain levels and you want to show them (eg "Bronze, Silver, Gold"). Write `na` to auto generate descriptions for the legend
-5. Dependent var for leaderboard: Plot the leaderboard bar graph with level or xp on the y-axis. `lvl` for levels, `exp` for xp. Default is `lvl`
-6. Specify whether to output a csv file with data for the number of members graphed. `y` for yes. Default is `n`
-
-Example of a valid config.ini file: 
-```
-123456789123456789
-500
-5,10,20,30,50
-na
-exp
-y
+```bash
+pip install -r requirements.txt
 ```
 
-### Running the program
-After filling in the config file, save all your changes. Run main.py with Python 3 to use the program
+### 2. Configure environment variables
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```
+DISCORD_TOKEN=your_bot_token_here
+CHANNEL_ID=the_channel_id_to_post_in
+MEE6_SERVER_ID=your_discord_server_id
+TOP=25
+```
+
+- **DISCORD_TOKEN** — from the [Discord Developer Portal](https://discord.com/developers/applications)
+- **CHANNEL_ID** — right-click a channel in Discord → Copy Channel ID (needs Developer Mode on)
+- **MEE6_SERVER_ID** — the numbers at the end of your MEE6 leaderboard URL
+- **TOP** — how many members to show (default: 25)
+
+### 3. Bot permissions
+
+The bot needs these permissions in the channel:
+- Read Messages
+- Send Messages
+- Embed Links
+
+No privileged intents required.
+
+### 4. Run locally
+
+```bash
+python leaderboard_bot.py
+```
+
+## Hosting on Railway
+
+1. Push this repo to GitHub
+2. Create a new project on [Railway](https://railway.app) and connect your repo
+3. Add the environment variables from `.env` in the Railway dashboard under **Variables**
+4. Railway will detect the `Procfile` and start the bot automatically as a worker

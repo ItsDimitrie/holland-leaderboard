@@ -1,3 +1,5 @@
 __pycache__/
+*.pyc
 mee6-leaderboard.csv
 .vscode
+.env
